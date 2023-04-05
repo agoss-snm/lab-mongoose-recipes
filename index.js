@@ -17,7 +17,32 @@ mongoose
   })
   .then(() => {
     // Run your code here, after you have insured that the connection was made
+    return Recipe.insertMany(data)
   })
+
+  //change the duration of Rigatoni alla Genovese
+  .then(() => {
+    return Recipe.findOneAndUpdate({ title: 'Rigatoni alla Genovese' }, { duration: 100 })
+      .catch((error) => console.log(error));
+  })
+
+//delete one recepy no more disable
+  .then(() => {
+    return Recipe.deleteOne({ title: 'Carrot Cake'})
+    .catch((error) => console.log(error));
+  })
+
+
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
+
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', () => {
+  mongoose.connection.close(() => {
+    console.log('Mongoose default connection disconnected through app termination');
+    process.exit(0);
+  });
+});
+
